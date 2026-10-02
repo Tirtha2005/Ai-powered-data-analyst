@@ -32,11 +32,11 @@ The repository includes pre-configured sample datasets inside the [`demo_data/`]
 
 ### 🖼️ Screenshots
 
-| 💬 **Dataset AI Assistant & Grounding** | 📊 **AI Analysis & Insights** |
+| 💬 **Front Page** | 📊 **API key Selection** |
 | :---: | :---: |
 | ![Dataset AI Assistant](demo%20images_videos/demo_screenshot_1.png) | ![AI Analysis & Insights](demo%20images_videos/demo_screenshot_2.png) |
 
-| 📈 **Automated Chart Suggestions & Rendering** | 🔍 **CSV File Comparison & Audit** |
+| 📈 **AI Assistant** | 🔍 **Automated Chart Suggestions & Rendering** |
 | :---: | :---: |
 | ![Chart Suggestions](demo%20images_videos/demo_screenshot_3.png) | ![CSV Compare](demo%20images_videos/demo_screenshot_4.png) |
 
