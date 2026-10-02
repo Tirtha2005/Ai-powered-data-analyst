@@ -1,21 +1,29 @@
-# AI-powered Data Analyst
+# 📊 AI-Powered Data Analyst
 
-> Turn raw spreadsheets into actionable insights instantly.
+> Turn raw CSV and Excel spreadsheets into actionable insights, automated visualizations, and intelligent AI reports instantly.
 
-Upload your CSV or Excel (.xlsx) files, connect your preferred AI provider, and instantly get intelligent charts, anomaly detection, and natural language insights — completely privately in your browser.
+[![Next.js](https://img.shields.io/badge/Next.js-16.2-black?logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.2-blue?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+Upload your CSV or Excel (`.xlsx`) files, connect your preferred AI provider (or run 100% locally via Ollama), and get instant intelligent charts, anomaly detection, data quality audits, and natural language query answers — completely private and secure.
 
 ---
 
 ## ✨ Features
 
-- 🧠 **AI-Powered Analysis** — Get instant insights, anomaly detection, and chart suggestions from your data.
-- 📊 **Smart Chart Generation** — Automatically generates beautiful interactive charts via Recharts.
-- 🔐 **Privacy-First** — Your data and API keys never leave your browser unless you explicitly call an AI endpoint. Keys are stored in your browser's local storage.
-- 🤖 **Multiple AI Providers** — Works with OpenAI, Anthropic (Claude), Google Gemini, Mistral, Together AI, and any OpenAI-compatible custom endpoint.
-- 📄 **PDF Export** — Download full analysis reports as professional PDF files.
-- 💬 **Chat with your Data** — Ask natural language questions about your CSV/Excel data.
-- 🌗 **Dark / Light Mode** — Fully themed with cookie-persisted dark/light/auto preference.
-- ⚡ **Blazing Fast** — Built with Next.js 16 (App Router + Turbopack) and React 19.
+- 🧠 **AI-Powered Data Analysis** — Instant insights, anomaly detection, statistical summaries, and automated chart recommendations.
+- 📊 **Smart Interactive Charts** — Dynamic visualizations powered by Recharts (Bar, Line, Area, Scatter, Pie, Radar, Composites).
+- 🔒 **Privacy-First Architecture** — Your data and API keys stay local in your browser or self-hosted backend.
+- 🤖 **Multi-Provider AI Support** — Native integration with **OpenAI**, **Anthropic (Claude)**, **Google Gemini**, **Mistral**, **Together AI**, and **Custom/Ollama** endpoints.
+- 🦙 **100% Offline AI via Ollama** — Run local LLMs like `llama3.1` or `llama3.2` with zero API costs and total data privacy.
+- 🗄️ **Supabase Integration** — Optional cloud synchronization for saved analysis results, chat history, and cloud file storage.
+- 📄 **Professional PDF Reports** — Export formatted analysis reports complete with tables and insights to PDF.
+- 💬 **Chat with Your Spreadsheet** — Ask natural language questions about your CSV/Excel datasets.
+- 🌗 **Adaptive UI Theme** — Full support for Light, Dark, and System automatic themes.
+- ⚡ **Turbopack & Monorepo Powered** — Built with Next.js 16 (App Router), React 19, and a dedicated `csv-charts-ai` workspace package.
 
 ---
 
@@ -23,65 +31,73 @@ Upload your CSV or Excel (.xlsx) files, connect your preferred AI provider, and 
 
 | Layer | Technology |
 |-------|------------|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript 5 |
-| UI | React 19 |
-| Styling | Tailwind CSS v4 + CSS Variables |
-| AI SDK | Vercel AI SDK v4 |
-| Charts | Recharts |
-| CSV Parsing | PapaParse |
-| Excel Parsing | read-excel-file |
-| PDF Export | jsPDF |
-| Package Manager | pnpm (v10) |
+| **Framework** | Next.js 16 (App Router + Turbopack) |
+| **Language** | TypeScript 5.9 |
+| **UI Library** | React 19 |
+| **Styling** | Tailwind CSS v4 + PostCSS |
+| **AI SDK** | Vercel AI SDK v4 (`ai`, `@ai-sdk/*`) |
+| **Database & Storage** | Supabase (`@supabase/supabase-js`, `@supabase/ssr`) |
+| **Charts** | Recharts 3 |
+| **Data Parsing** | PapaParse (CSV), `read-excel-file` (Excel) |
+| **Export** | jsPDF & jsPDF-AutoTable |
+| **Package Manager** | pnpm v10 (Workspace monorepo) |
 
 ---
 
 ## 📋 Prerequisites
 
-Make sure you have the following installed before starting:
+Before setting up the project, ensure you have installed:
 
-- **Node.js** v20 or higher — [Download here](https://nodejs.org/)
-- **pnpm** v10 or higher — Install with:
+- **Node.js**: `v20.0.0` or higher ([Download Node.js](https://nodejs.org/))
+- **pnpm**: `v10.0.0` or higher
   ```bash
   npm install -g pnpm
   ```
+- **Docker Desktop** *(Optional, for containerized running)* — [Download Docker](https://www.docker.com/)
 
 ---
 
 ## 🚀 Local Development Setup
 
-### 1. Clone the project
+### 1. Clone the repository
 
 ```bash
-git clone <your-repo-url>
-cd <your-project-folder>
+git clone https://github.com/Tirtha2005/Ai-powered-data-analyst.git
+cd Ai-powered-data-analyst
 ```
 
 ### 2. Install dependencies
 
-This project is a monorepo. A single `pnpm install` installs all dependencies for both the web app and the internal `csv-charts-ai` package.
+This repository is structured as a pnpm workspace. Installing at the root sets up all packages (`csv-charts-ai` and Next.js app):
 
 ```bash
 pnpm install
 ```
 
-### 3. Set up environment variables (optional)
+### 3. Environment Configuration
 
-Copy the example env file. For most features, no environment variables are needed — API keys are entered directly in the browser UI.
+Copy `.env.example` to create your local environment file:
 
 ```bash
 cp .env.example .env
 ```
 
-### 4. Start the development server
+To enable Supabase sync features, fill in your Supabase credentials in `.env`:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
+
+> *Note: For basic usage and local AI processing, no environment variables are strictly required — API keys can be entered directly in the web UI.*
+
+### 4. Run the development server
 
 ```bash
 pnpm dev
 ```
 
-The app will be available at **[http://localhost:3000](http://localhost:3000)**.
-
-The dev server uses **Turbopack** for fast hot-reloading. On first run, it also builds the internal `csv-charts-ai` workspace package automatically.
+Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
 ---
 
@@ -90,242 +106,130 @@ The dev server uses **Turbopack** for fast hot-reloading. On first run, it also 
 ```
 .
 ├── src/
-│   ├── app/                    # Next.js App Router pages & layouts
-│   │   ├── _components/        # UI components (charts, landing page, settings, etc.)
-│   │   ├── api/                # Next.js API routes (AI streaming)
-│   │   ├── legal/              # Legal & privacy page
-│   │   └── page.tsx            # Main application page
-│   ├── lib/                    # Shared utilities (AI service, CSV parser, chat store, PDF export)
-│   └── styles/
-│       └── globals.css         # Global CSS with Tailwind v4 + theme variables
+│   ├── app/                    # Next.js 16 App Router pages and API endpoints
+│   │   ├── _components/        # UI Components (Charts, Tables, FileUpload, AI Views)
+│   │   ├── api/                # Streaming AI proxy & Supabase API routes
+│   │   ├── legal/              # Privacy & Terms pages
+│   │   └── page.tsx            # Application entrypoint
+│   ├── lib/                    # Core application logic & utilities
+│   │   ├── supabase/           # Supabase client, services & migrations
+│   │   ├── ai-service.ts       # Unified multi-provider AI engine
+│   │   ├── csv-parser.ts       # Robust CSV stream parser
+│   │   └── pdf-export.ts       # Report generation utility
+│   └── styles/                 # Global styling and CSS variables
 │
 ├── packages/
-│   └── csv-charts-ai/          # Core standalone package: AI analysis, chart logic, XLSX parsing
+│   └── csv-charts-ai/          # Standalone workspace package for chart AI & data parsing
 │
-├── public/                     # Static assets
-├── scripts/                    # Build & utility scripts
-├── Dockerfile                  # Multi-stage Docker build
-├── docker-compose.yml          # Docker Compose for easy deployment
-├── next.config.js              # Next.js configuration
-└── package.json                # Root workspace manifest
+├── supabase/
+│   └── migrations/             # Database SQL schema & storage policies
+│
+├── public/                     # Static icons, models, and assets
+├── Dockerfile                  # Multi-stage production build container
+├── docker-compose.yml          # Container orchestration config
+└── package.json                # Root workspace configuration
 ```
 
 ---
 
-## 🐳 Docker Deployment
+## 🐳 Docker Setup
 
-A production-ready **multi-stage Dockerfile** is included. It uses Node 24 Alpine and runs the app as a non-root user.
+### Option 1: Docker Compose (Recommended)
 
-### Using Docker Compose (Recommended)
+Start the production container using Docker Desktop or Docker CLI:
 
 ```bash
-# Build the image and start the container in the background
 docker-compose up --build -d
 ```
 
-The app will be available at **[http://localhost:3000](http://localhost:3000)**.
+Access the application at **[http://localhost:3000](http://localhost:3000)**.
 
-### Using Docker directly
+To stop the container:
 
 ```bash
-# Build the image
-docker build -t ai-data-analyst .
-
-# Run the container
-docker run -p 3000:3000 ai-data-analyst
+docker-compose down
 ```
 
-### Passing API Keys via Docker (Optional)
+### Option 2: Docker CLI
 
 ```bash
-docker run -p 3000:3000 \
-  -e OPENAI_API_KEY=your_key_here \
-  -e ANTHROPIC_API_KEY=your_key_here \
-  -e GOOGLE_GENERATIVE_AI_API_KEY=your_key_here \
-  ai-data-analyst
+# Build Docker image
+docker build -t ai-powered-data-analyst .
+
+# Run container
+docker run -p 3000:3000 ai-powered-data-analyst
 ```
 
 ---
 
-## 🧪 Testing & Linting
+## 🦙 Running Free Local AI (Ollama + Llama 3)
+
+Run complete AI analysis offline on your computer without sharing data or paying API fees.
+
+### Step 1: Install Ollama
+
+- **macOS / Linux:**
+  ```bash
+  curl -fsSL https://ollama.com/install.sh | sh
+  ```
+- **Windows:** Download from [ollama.com/download](https://ollama.com/download)
+
+### Step 2: Download Model
 
 ```bash
-# Run all unit tests
-pnpm test
-
-# Run unit tests in watch mode
-pnpm test:watch
-
-# Run end-to-end tests (Playwright)
-pnpm test:e2e
-
-# Run all tests (package + app)
-pnpm test:all
-
-# Lint the codebase
-pnpm lint
-
-# Auto-fix lint & formatting issues
-pnpm lint:fix
-
-# Check TypeScript types
-pnpm typecheck
-
-# Check formatting
-pnpm format:check
-
-# Auto-format code
-pnpm format:write
-```
-
----
-
-## 🔑 AI Provider Setup
-
-No environment variables are required. API keys are configured directly inside the app through the **Settings panel**.
-
-Supported providers:
-- **OpenAI** — GPT-4o, GPT-4, GPT-3.5-turbo, etc.
-- **Anthropic** — Claude 3.5 Sonnet, Claude 3 Haiku, etc.
-- **Google** — Gemini 1.5 Pro, Gemini Flash, etc.
-- **Mistral** — Mistral Large, Mistral 8x7B, etc.
-- **Together AI** — Llama 3, Mixtral, etc.
-- **Custom / Self-hosted** — Any OpenAI-compatible endpoint (e.g., Ollama, LM Studio).
-
----
-
-## 🦙 Running Llama 3 Locally (Free & Private)
-
-You can run **Llama 3 completely offline and for free** on your own machine using [Ollama](https://ollama.com). This means zero API costs and 100% private — no data ever leaves your computer.
-
-### Step 1 — Install Ollama
-
-**macOS / Linux:**
-```bash
-curl -fsSL https://ollama.com/install.sh | sh
-```
-
-**Windows:**
-Download and run the installer from [https://ollama.com/download](https://ollama.com/download)
-
-Verify the installation:
-```bash
-ollama --version
-```
-
----
-
-### Step 2 — Download the Llama 3 Model
-
-Choose the version that fits your machine's RAM:
-
-```bash
-# Llama 3.2 3B — Lightweight, great for low-RAM machines (~4 GB RAM)
-ollama pull llama3.2
-
-# Llama 3.1 8B — Recommended for most laptops (requires ~8 GB RAM)
+# Recommended for laptops (Requires ~8 GB RAM)
 ollama pull llama3.1
 
-# Llama 3 8B — Stable older release
-ollama pull llama3
-
-# Llama 3 70B — Most powerful, requires ~40 GB RAM
-ollama pull llama3:70b
+# Lightweight alternative for lower RAM (~4 GB RAM)
+ollama pull llama3.2
 ```
 
-> 💡 **Not sure which to pick?** Use `llama3.1` on modern laptops (8 GB+ RAM) and `llama3.2` on older or low-RAM machines.
-
----
-
-### Step 3 — Start the Ollama Server
+### Step 3: Start Ollama Server
 
 ```bash
 ollama serve
 ```
 
-This starts a local API server at `http://localhost:11434`. Keep this terminal open and running.
+### Step 4: Configure App UI
 
-Verify it is working by opening a second terminal:
-```bash
-curl http://localhost:11434
-# Expected response: Ollama is running
-```
-
----
-
-### Step 4 — Test Llama 3 in Your Terminal (Optional)
-
-Chat with Llama 3 directly from your terminal before connecting it to the app:
-
-```bash
-ollama run llama3.1
-```
-
-Type your message and press **Enter**. Type `/bye` or press **Ctrl+D** to exit.
+1. Open the app at **[http://localhost:3000](http://localhost:3000)**
+2. Click the ⚙️ **Settings** button in the top right header.
+3. Choose **Custom / Self-hosted (OpenAI Compatible)**.
+4. Input settings:
+   - **Base URL:** `http://localhost:11434/v1`
+   - **API Key:** `ollama` *(any string)*
+   - **Model Name:** `llama3.1` (or `llama3.2`)
+5. Click **Save Configuration**.
 
 ---
 
-### Step 5 — Connect Llama 3 to This App
-
-1. Open the app at [http://localhost:3000](http://localhost:3000)
-2. Click the ⚙️ **Settings** icon (top-right corner)
-3. Select **"Custom / Self-hosted"** as the AI provider
-4. Fill in the following values:
-
-   | Field | Value |
-   |-------|-------|
-   | **Base URL** | `http://localhost:11434/v1` |
-   | **API Key** | `ollama` *(any non-empty string works)* |
-   | **Model Name** | `llama3.1` *(or whichever model you pulled)* |
-
-5. Click **Save** — you're done! 🎉
-
-The app will now send all AI requests to your local Llama 3 instance.
-
----
-
-### Quick Reference — Common Ollama Commands
+## 🧪 Testing & Code Quality
 
 ```bash
-# List all models you have downloaded
-ollama list
+# Run unit tests (Vitest)
+pnpm test
 
-# Download a model
-ollama pull llama3.1
+# Run all workspace unit tests
+pnpm test:all
 
-# Run a model interactively in your terminal
-ollama run llama3.1
+# Run End-to-End browser tests (Playwright)
+pnpm test:e2e
 
-# Check which models are currently loaded/running
-ollama ps
+# Run linter
+pnpm lint
 
-# Show detailed info about a model
-ollama show llama3.1
+# Auto-fix linting issues
+pnpm lint:fix
 
-# Remove a model to free up disk space
-ollama rm llama3
+# Check TypeScript types
+pnpm typecheck
 
-# Stop the Ollama background service (Linux)
-sudo systemctl stop ollama
-
-# View live Ollama server logs (Linux)
-journalctl -u ollama -f
+# Format codebase
+pnpm format:write
 ```
-
----
-
-### Troubleshooting Ollama
-
-| Problem | Solution |
-|---------|----------|
-| `connection refused` on port 11434 | Run `ollama serve` in a separate terminal first |
-| App shows "model not found" | Run `ollama pull llama3.1` to download the model |
-| Very slow responses | Use a smaller model like `llama3.2` or `phi3:mini` |
-| App crashes / out of memory | Switch to a smaller model and close other apps |
-| CORS error in browser | Ollama already allows localhost — no extra config needed |
 
 ---
 
 ## 📜 License
 
-MIT
+Distributed under the **MIT License**. See `LICENSE` for details.
