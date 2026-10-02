@@ -23,6 +23,15 @@ const ALIASES: Record<string, string> = {
   "@ai-sdk/anthropic": "anthropic",
   "@ai-sdk/google": "google",
   "@ai-sdk/mistral": "mistral",
+  "@ai-sdk/groq": "groq",
+  "@openrouter/ai-sdk-provider": "openrouter",
+  "@ai-sdk/openrouter": "openrouter",
+  "@ai-sdk/deepinfra": "deepinfra",
+  "@ai-sdk/togetherai": "together",
+  "@ai-sdk/together": "together",
+  "@ai-sdk/cerebras": "cerebras",
+  "@ai-sdk/perplexity": "perplexity",
+  "@ai-sdk/xai": "xai",
 };
 
 function resolveAlias(name: string): string {

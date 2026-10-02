@@ -10,6 +10,8 @@ export const DEFAULT_MODEL: ModelId = ""; // Empty - user must select a model
 // Per-provider default models (prefer the canonical model id from the live catalog)
 export const DEFAULT_MODEL_BY_PROVIDER: Record<string, string> = {
   google: "gemini-2.5-flash",
+  groq: "llama-3.3-70b-versatile",
+  openrouter: "google/gemini-2.0-flash-exp:free",
   anthropic: "claude-haiku-4-5",
   mistral: "mistral-small-latest",
   openai: "gpt-5-mini",

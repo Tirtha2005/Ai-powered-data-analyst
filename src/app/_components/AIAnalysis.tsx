@@ -688,62 +688,13 @@ export function AIAnalysis({
         return next;
       });
 
-      // Inject dataframe initialization before the generated code for execution ONLY
-      const csvString = [
-        data.headers.join(","),
-        ...data.rows.map((row) =>
-          data.headers
-            .map((h, i) => {
-              let val = row[i];
-              if (val === null || val === undefined) return "";
-              return `"${String(val).replace(/"/g, '""')}"`;
-            })
-            .join(","),
-        ),
-      ].join("\\n");
-
-      // Replace any pd.read_csv call in the generated code to use our csv_data instead
-      const executablePythonCode =
-        `import pandas as pd\nimport io\n\ncsv_data = """${csvString}"""\n` +
-        cleanPythonCode.replace(
-          /pd\.read_csv\([^)]*\)/g,
-          "pd.read_csv(io.StringIO(csv_data))",
-        );
-
-      toast.loading("Executing Python Code...", { id: "code-toast" });
-
-      const response = await fetch("/api/coding", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code: executablePythonCode,
-          apiKey: config.apiKey, // Passing the user's API key
-        }),
-      });
-
-      if (!response.ok) {
-        // If execution fails, we still want to show the code without breaking the UI with a red error block
-        toast.success("Code Generated", { id: "code-toast" });
-        return;
-      }
-
-      const result = await response.json();
-
-      setCodeHistory((prev) => {
-        const next = [...prev];
-        const last = next[next.length - 1];
-        if (last) {
-          next[next.length - 1] = { ...last, result };
-        }
-        return next;
-      });
-
-      toast.success("Execution Complete", { id: "code-toast" });
+      toast.success("Python Code Generated", { id: "code-toast" });
     } catch (err: any) {
-      setCodeError(err.message || "Execution failed");
-      toast.error("Execution Failed", {
+      const message = err.message || "Code generation failed";
+      setCodeError(message);
+      toast.error("Generation Failed", {
         id: "code-toast",
-        description: err.message,
+        description: message,
       });
     } finally {
       setIsCoding(false);
@@ -1393,57 +1344,26 @@ export function AIAnalysis({
                         <div className="rounded-lg bg-blue-500/20 p-2">
                           <Code className="h-4 w-4 text-blue-400" />
                         </div>
-                        <div className="flex-1 overflow-x-auto rounded-xl border border-blue-500/20 bg-blue-500/10 p-3">
-                          <pre className="overflow-x-auto text-sm whitespace-pre-wrap text-gray-300">
+                        <div className="relative flex-1 overflow-x-auto rounded-xl border border-blue-500/30 bg-slate-950/90 p-4 font-mono text-sm">
+                          <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2.5">
+                            <span className="text-xs font-semibold tracking-wider text-blue-400 uppercase">
+                              Python Code
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                void navigator.clipboard.writeText(item.code!);
+                                toast.success("Code copied to clipboard");
+                              }}
+                              className="flex items-center gap-1.5 rounded-lg bg-white/10 px-2.5 py-1 text-xs font-medium text-gray-300 transition-colors hover:bg-white/20 hover:text-white"
+                            >
+                              <Copy className="h-3.5 w-3.5 text-gray-300" />
+                              Copy Code
+                            </button>
+                          </div>
+                          <pre className="overflow-x-auto text-sm text-gray-200 whitespace-pre-wrap">
                             {item.code}
                           </pre>
-                        </div>
-                      </div>
-                    )}
-                    {item.result && (
-                      <div className="flex items-start gap-3">
-                        <div className="rounded-lg bg-emerald-500/20 p-2">
-                          <Play className="h-4 w-4 text-emerald-400" />
-                        </div>
-                        <div className="flex-1 overflow-x-auto rounded-xl border border-emerald-500/30 bg-white/5 p-3">
-                          {item.result.error_message ? (
-                            <p className="text-sm text-red-400">
-                              {item.result.error_message}
-                            </p>
-                          ) : item.result.outputs?.length > 0 ? (
-                            item.result.outputs.map((out: any, j: number) => {
-                              if (out.type === "text/plain") {
-                                return (
-                                  <pre
-                                    key={j}
-                                    className="text-sm whitespace-pre-wrap text-gray-300"
-                                  >
-                                    {out.data}
-                                  </pre>
-                                );
-                              } else if (
-                                out.type === "image/png" ||
-                                out.type.startsWith("image/")
-                              ) {
-                                return (
-                                  <img
-                                    key={j}
-                                    src={`data:${out.type};base64,${out.data}`}
-                                    className="mt-2 max-w-full rounded"
-                                  />
-                                );
-                              }
-                              return (
-                                <p key={j} className="text-sm text-gray-400">
-                                  Unsupported output format
-                                </p>
-                              );
-                            })
-                          ) : (
-                            <p className="text-sm text-gray-400">
-                              Execution completed with no output.
-                            </p>
-                          )}
                         </div>
                       </div>
                     )}

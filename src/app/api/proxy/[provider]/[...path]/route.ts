@@ -16,11 +16,14 @@ export async function POST(
   } else if (provider === "groq") {
     targetUrl = `https://api.groq.com/openai/v1/${path}`;
     authHeader = `Bearer ${process.env.GROQ_API_KEY}`;
-  } else if (provider === "gemini") {
-    // Gemini SDK might construct URLs slightly differently, but we handle the key here
+  } else if (provider === "openrouter") {
+    targetUrl = `https://openrouter.ai/api/v1/${path}`;
+    authHeader = `Bearer ${process.env.OPENROUTER_API_KEY}`;
+  } else if (provider === "gemini" || provider === "google") {
     const searchParams = req.nextUrl.searchParams;
     const queryString = searchParams.toString();
-    targetUrl = `https://generativelanguage.googleapis.com/v1beta/${path}?key=${process.env.GEMINI_API_KEY}${queryString ? "&" + queryString : ""}`;
+    const key = process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || "";
+    targetUrl = `https://generativelanguage.googleapis.com/v1beta/${path}?key=${key}${queryString ? "&" + queryString : ""}`;
   } else {
     return new Response("Unknown provider", { status: 400 });
   }

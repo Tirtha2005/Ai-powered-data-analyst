@@ -330,7 +330,7 @@ export function createAppModel(config: AppModelConfig): LanguageModel {
   const modelName = config.customModel ?? config.model ?? "";
 
   if (config.customEndpoint) {
-    const factory = requireProvider("openai");
+    const factory = requireProvider("@ai-sdk/openai-compatible");
     return factory({
       apiKey: config.apiKey || "",
       model: config.customModel ?? modelName,

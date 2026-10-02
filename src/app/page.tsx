@@ -52,6 +52,7 @@ const DataTransform = lazy(() =>
     default: m.DataTransform,
   })),
 );
+import { DatasetChat } from "./_components/DatasetChat";
 import {
   type CSVData,
   type CSVSettings,
@@ -752,6 +753,20 @@ export default function HomePage() {
                     </div>
                     <Suspense fallback={<LazyFallback />}>
                       <div className="space-y-4">
+                        <FullscreenCard className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50">
+                          <DatasetChat
+                            key={`dataset-chat-${dataVersion}`}
+                            data={effectiveData ?? csvData}
+                            fileName={currentFileName}
+                            apiSettings={apiSettings}
+                            disabled={
+                              isAnalyzingAll ||
+                              isTransforming ||
+                              !(effectiveData?.rowCount ?? csvData?.rowCount)
+                            }
+                          />
+                        </FullscreenCard>
+
                         <FullscreenCard className="overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50">
                           <AIAnalysis
                             key={`analysis-${dataVersion}`}

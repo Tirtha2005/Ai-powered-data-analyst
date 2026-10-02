@@ -48,18 +48,20 @@ registerProvider("anthropic", (config) => {
 });
 registerProvider("google", fromSDK(createGoogleGenerativeAI));
 registerProvider("mistral", fromSDK(createMistral));
-registerProvider("@ai-sdk/openai-compatible", (config) => {
-  if (!config.baseURL)
-    throw new Error(
-      "This provider has no API URL. Select it again in API settings or configure a custom endpoint.",
-    );
+const createOpenAICompatibleModel = (
+  name: string,
+  defaultBaseURL: string,
+  config: any,
+  extraHeaders?: Record<string, string>,
+) => {
   return createOpenAICompatible({
-    name: "openai-compatible",
-    baseURL: config.baseURL,
+    name,
+    baseURL: config.baseURL || defaultBaseURL,
     apiKey: config.apiKey,
-    headers: config.headers,
-    // Retain the SDK's schema, then translate it for JSON-object APIs such as GLM.
-    // Validation remains in generateObject; the server need not implement json_schema.
+    headers: {
+      ...extraHeaders,
+      ...config.headers,
+    },
     supportsStructuredOutputs: true,
     transformRequestBody: (body) => {
       const format = body.response_format as
@@ -79,6 +81,39 @@ registerProvider("@ai-sdk/openai-compatible", (config) => {
       };
     },
   }).chatModel(config.model);
+};
+
+const createGroqProvider = (config: any) =>
+  createOpenAICompatibleModel(
+    "groq",
+    "https://api.groq.com/openai/v1",
+    config,
+  );
+
+registerProvider("groq", createGroqProvider);
+registerProvider("@ai-sdk/groq", createGroqProvider);
+
+const createOpenRouterProvider = (config: any) =>
+  createOpenAICompatibleModel(
+    "openrouter",
+    "https://openrouter.ai/api/v1",
+    config,
+    {
+      "HTTP-Referer": "https://csv-ai-analyzer.com",
+      "X-Title": "AI Data Analyst",
+    },
+  );
+
+registerProvider("openrouter", createOpenRouterProvider);
+registerProvider("@openrouter/ai-sdk-provider", createOpenRouterProvider);
+registerProvider("@ai-sdk/openrouter", createOpenRouterProvider);
+
+registerProvider("@ai-sdk/openai-compatible", (config) => {
+  if (!config.baseURL)
+    throw new Error(
+      "This provider has no API URL. Select it again in API settings or configure a custom endpoint.",
+    );
+  return createOpenAICompatibleModel("openai-compatible", config.baseURL, config);
 });
 
 // ============ Re-exports from package ============
@@ -351,4 +386,68 @@ export const fetchSuggestedQuestions = async (
     1000,
     config.signal,
   );
+};
+
+export const streamGroundedDatasetChat = async (
+  config: AIServiceConfig,
+  userPrompt: string,
+  fileName: string | undefined,
+  data: TabularData,
+  dataSummary: string,
+  onChunk: (chunk: string) => void,
+  onComplete: (fullText: string) => void,
+  conversationHistory: Array<{ prompt: string; response: string }> = [],
+): Promise<void> => {
+  const model = getModel(config);
+  config.signal?.throwIfAborted();
+
+  const language = LANGUAGE_NAMES[config.language ?? "en"];
+
+  const systemPrompt = `You are a specialized Data Retrieval & Q&A Assistant dedicated EXCLUSIVELY to analyzing and retrieving information about the loaded dataset.
+
+DATASET METADATA:
+File Name: "${fileName || "dataset.csv"}"
+Total Rows: ${data.rowCount}
+Total Columns: ${data.headers.length}
+Columns: (${data.columns.map((c) => `${c.name} [${c.type}]`).join(", ")})
+
+STATISTICAL SUMMARY & SAMPLE DATA:
+${dataSummary}
+
+STRICT GUARDRAILS & RULES:
+1. GROUNDING RULE: You must answer questions ONLY using facts, statistics, values, calculations, or descriptions present in or directly derived from the dataset summarized above.
+2. REJECTION GUARDRAIL: If the user asks about ANY topic unrelated to this dataset (such as world news, general knowledge, creative writing, capital cities, general coding, sports, etc.), DECLINE IMMEDIATELY using this exact response wording:
+   "I am your Dataset AI Assistant, strictly restricted to answering questions about the loaded dataset (**${fileName || "dataset.csv"}**). Your question appears to be unrelated to this dataset. Please ask a question related to the dataset columns: ${data.headers.join(", ")}."
+3. NO HALLUCINATION: Do NOT invent, assume, or fabricate any data, columns, or metrics that do not exist in the dataset. If information is missing or not present, explicitly state that it is not available in the dataset.
+4. LANGUAGE: Respond in ${language}. Use clear Markdown formatting with bolding, bullet points, or tables for maximum readability.`;
+
+  const messages: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
+    { role: "system", content: systemPrompt },
+  ];
+
+  for (const item of conversationHistory) {
+    messages.push({ role: "user", content: item.prompt });
+    messages.push({ role: "assistant", content: item.response });
+  }
+
+  messages.push({ role: "user", content: userPrompt });
+
+  const { streamText } = await import("ai");
+  const result = streamText({
+    model,
+    messages,
+    temperature: 0.2, // Low temperature for maximum factual accuracy & zero hallucination
+    ...(config.signal && { abortSignal: config.signal }),
+  });
+
+  let fullText = "";
+  for await (const chunk of result.textStream) {
+    if (config.signal?.aborted) break;
+    fullText += chunk;
+    onChunk(chunk);
+  }
+
+  if (!config.signal?.aborted) {
+    onComplete(fullText);
+  }
 };

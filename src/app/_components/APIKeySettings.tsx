@@ -58,6 +58,8 @@ const KNOWN_PROVIDER_API: Record<string, string> = {
   anthropic: "https://api.anthropic.com/v1",
   google: "https://generativelanguage.googleapis.com/v1beta",
   mistral: "https://api.mistral.ai/v1",
+  groq: "https://api.groq.com/openai/v1",
+  openrouter: "https://openrouter.ai/api/v1",
 };
 
 interface APIKeySettingsProps {
@@ -155,7 +157,7 @@ export function APIKeySettings({
   const providerSelectOptions = useMemo(() => {
     if (!catalog) return { recommended: [], others: [] };
     // Recommended providers to surface first and mark in the UI
-    const recommendedIds = ["google", "anthropic", "mistral", "openai"];
+    const recommendedIds = ["google", "groq", "openrouter", "openai", "anthropic", "mistral"];
 
     // Build an array with recommended providers first (in that order) then the rest
     const allProviders = Object.values(catalog);
@@ -489,9 +491,39 @@ export function APIKeySettings({
                 {/* Quick Presets */}
                 <div>
                   <p className="mb-2 text-xs font-semibold tracking-wide text-gray-400 uppercase">
-                    Quick Setup
+                    Quick Setup (Free & Local Presets)
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCustomEndpoint("https://api.groq.com/openai/v1");
+                        setCustomModel("llama-3.3-70b-versatile");
+                      }}
+                      className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                        customEndpoint === "https://api.groq.com/openai/v1"
+                          ? "border-violet-500 bg-violet-500/20 text-violet-300"
+                          : "border-gray-700 bg-gray-800 text-gray-300 hover:border-violet-500/50 hover:bg-violet-500/10"
+                      }`}
+                    >
+                      <Zap className="h-3.5 w-3.5 text-amber-400" />
+                      Groq (Free)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCustomEndpoint("https://openrouter.ai/api/v1");
+                        setCustomModel("google/gemini-2.0-flash-exp:free");
+                      }}
+                      className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                        customEndpoint === "https://openrouter.ai/api/v1"
+                          ? "border-violet-500 bg-violet-500/20 text-violet-300"
+                          : "border-gray-700 bg-gray-800 text-gray-300 hover:border-violet-500/50 hover:bg-violet-500/10"
+                      }`}
+                    >
+                      <Globe className="h-3.5 w-3.5 text-sky-400" />
+                      OpenRouter (Free)
+                    </button>
                     <button
                       type="button"
                       onClick={() => {
