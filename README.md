@@ -12,6 +12,36 @@ Upload your CSV or Excel (`.xlsx`) files, connect your preferred AI provider (or
 
 ---
 
+## 📁 Sample Demo Datasets (`demo_data/`)
+
+The repository includes pre-configured sample datasets inside the [`demo_data/`](demo_data/) directory:
+
+| Dataset File | Rows | Columns | Description & Features Tested |
+| :--- | :---: | :---: | :--- |
+| 📦 [`demo_data/products.csv`](demo_data/products.csv) | 25 | 4 | **Product Catalogue**: Includes `product_id`, `product_name`, `category`, and `cost`. Used for quick grounded AI Q&A, product cost distribution, and category summaries. |
+| 📈 [`demo_data/sales.csv`](demo_data/sales.csv) | 5,000+ | 9 | **E-Commerce Transactions**: Includes `order_id`, `order_date`, `customer_id`, `product_id`, `region`, `quantity`, `unit_price`, `discount`, and `revenue`. Used for trend charts, regional breakdowns, multi-file comparison (`CSV Compare`), and large-scale dataset analytics. |
+
+---
+
+## 📸 Application Demos & Video
+
+### 🎥 Demo Walkthrough Video
+<video src="demo%20images_videos/demo_walkthrough.mp4" controls width="100%"></video>
+
+> *Watch the application in action: interactive dataset uploads, custom dataset chat assistant, automated chart rendering, and AI insights.*
+
+### 🖼️ Screenshots
+
+| 💬 **Dataset AI Assistant & Grounding** | 📊 **AI Analysis & Insights** |
+| :---: | :---: |
+| ![Dataset AI Assistant](demo%20images_videos/demo_screenshot_1.png) | ![AI Analysis & Insights](demo%20images_videos/demo_screenshot_2.png) |
+
+| 📈 **Automated Chart Suggestions & Rendering** | 🔍 **CSV File Comparison & Audit** |
+| :---: | :---: |
+| ![Chart Suggestions](demo%20images_videos/demo_screenshot_3.png) | ![CSV Compare](demo%20images_videos/demo_screenshot_4.png) |
+
+---
+
 ## ✨ Features
 
 - 🧠 **AI-Powered Data Analysis** — Instant insights, anomaly detection, statistical summaries, and automated chart recommendations.
@@ -24,6 +54,78 @@ Upload your CSV or Excel (`.xlsx`) files, connect your preferred AI provider (or
 - 💬 **Chat with Your Spreadsheet** — Ask natural language questions about your CSV/Excel datasets.
 - 🌗 **Adaptive UI Theme** — Full support for Light, Dark, and System automatic themes.
 - ⚡ **Turbopack & Monorepo Powered** — Built with Next.js 16 (App Router), React 19, and a dedicated `csv-charts-ai` workspace package.
+
+---
+
+## 🏗️ System Architecture
+
+The application follows a modern, privacy-first architecture separating in-browser data processing, grounded AI guardrails, multi-provider model routing, and optional Supabase cloud persistence:
+
+![System Architecture Diagram](demo%20images_videos/architecture_diagram.png)
+
+<details>
+<summary><b>View Interactive Mermaid Diagram Source</b></summary>
+
+```mermaid
+graph TD
+    subgraph Client ["Client Browser (Next.js 16 + React 19)"]
+        UI["User Interface (App Router)"]
+        Upload["File Upload (CSV / Excel)"]
+        Parser["In-Browser Data Parser (PapaParse / read-excel-file)"]
+        ChatUI["Dataset Chat Assistant (Grounded Q&A)"]
+        AnalysisUI["AI Analysis & Chart Suggestions"]
+        Recharts["Recharts Visualization Engine"]
+        PDF["jsPDF Report Exporter"]
+    end
+
+    subgraph Service ["AI Service & Guardrails Engine"]
+        AIEngine["Unified AI Engine (ai-service.ts)"]
+        Guardrails["Dataset Guardrails & Anti-Hallucination Filter"]
+        Proxy["Next.js Proxy Router (/api/proxy)"]
+    end
+
+    subgraph AIProviders ["AI Models & Providers"]
+        OpenAI["OpenAI (GPT-4o / GPT-4o-mini)"]
+        Gemini["Google Gemini (2.0 Flash / Pro)"]
+        Groq["Groq (Llama 3.3 70B)"]
+        Anthropic["Anthropic (Claude 3.5 Sonnet)"]
+        OpenRouter["OpenRouter API"]
+        Ollama["Local Ollama (Llama 3.1 / 3.2)"]
+    end
+
+    subgraph Backend ["Supabase Backend & Storage"]
+        SupaAuth["Supabase Auth (SSR Cookie Sessions)"]
+        SupaDB[("PostgreSQL Database (analysis_results, chat_messages)")]
+        SupaStorage["Supabase Storage (csv-files bucket)"]
+    end
+
+    %% Flow Connections
+    Upload --> Parser
+    Parser --> UI
+    UI --> ChatUI
+    UI --> AnalysisUI
+    ChatUI --> Guardrails
+    Guardrails --> AIEngine
+    AnalysisUI --> AIEngine
+    AIEngine --> Proxy
+    
+    Proxy -->|API Call| OpenAI
+    Proxy -->|API Call| Gemini
+    Proxy -->|API Call| Groq
+    Proxy -->|API Call| Anthropic
+    Proxy -->|API Call| OpenRouter
+    Proxy -->|Local HTTP| Ollama
+
+    AIEngine -->|Streaming Response| UI
+    UI --> Recharts
+    UI --> PDF
+
+    UI --> SupaAuth
+    UI --> SupaDB
+    UI --> SupaStorage
+```
+
+</details>
 
 ---
 
@@ -230,6 +332,3 @@ pnpm format:write
 
 ---
 
-## 📜 License
-
-Distributed under the **MIT License**. See `LICENSE` for details.

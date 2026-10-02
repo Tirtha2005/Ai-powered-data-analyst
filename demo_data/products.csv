@@ -1,0 +1,26 @@
+product_id,product_name,category,cost
+PROD-001,Product 1,Electronics,271.74
+PROD-002,Product 2,Office Supplies,249.67
+PROD-003,Product 3,Electronics,269.7
+PROD-004,Product 4,Electronics,13.14
+PROD-005,Product 5,Furniture,36.47
+PROD-006,Product 6,Electronics,285.52
+PROD-007,Product 7,Furniture,176.3
+PROD-008,Product 8,Office Supplies,140.05
+PROD-009,Product 9,Electronics,105.31
+PROD-010,Product 10,Office Supplies,228.19
+PROD-011,Product 11,Office Supplies,238.99
+PROD-012,Product 12,Electronics,153.38
+PROD-013,Product 13,Electronics,169.36
+PROD-014,Product 14,Office Supplies,267.43
+PROD-015,Product 15,Electronics,43.95
+PROD-016,Product 16,Electronics,230.84
+PROD-017,Product 17,Office Supplies,39.33
+PROD-018,Product 18,Electronics,213.28
+PROD-019,Product 19,Electronics,248.34
+PROD-020,Product 20,Office Supplies,33.59
+PROD-021,Product 21,Electronics,296.13
+PROD-022,Product 22,Electronics,117.49
+PROD-023,Product 23,Furniture,284.7
+PROD-024,Product 24,Furniture,228.48
+PROD-025,Product 25,Electronics,34.22
