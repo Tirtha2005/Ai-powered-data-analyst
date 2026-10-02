@@ -1,0 +1,37 @@
+name: csv-ai-analyzer
+
+services:
+  csv-ai-analyzer:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:-http://localhost:54321}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyYWR2c2tudmZqdHJvcGpreXVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5Mjk2MzMsImV4cCI6MjEwNjUwNTYzM30.KiSB8wK3qgqd4PXZb-uvmXJXSBVx2bOrxCjuwAFaRSs}
+    image: csv-ai-analyzer:latest
+    container_name: csv-ai-analyzer
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+      - path: .env.local
+        required: false
+    environment:
+      - NODE_ENV=production
+      - IS_DOCKER=true
+      - NEXT_OUTPUT_MODE=standalone
+      # Pass API keys from host environment
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GOOGLE_GENERATIVE_AI_API_KEY=${GOOGLE_GENERATIVE_AI_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY:-}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL:-}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+

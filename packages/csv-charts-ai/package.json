@@ -1,0 +1,91 @@
+{
+  "name": "csv-charts-ai",
+  "version": "1.15.3",
+  "description": "AI-powered CSV analysis, chart generation, and interactive visualization. Parse CSV, detect anomalies, suggest charts, and ask questions about your data using any LLM provider.",
+  "type": "module",
+  "license": "MIT",
+  "author": "AI-powered Data Analyst Team",
+
+  "keywords": [
+    "csv",
+    "ai",
+    "charts",
+    "data-analysis",
+    "visualization",
+    "llm",
+    "openai",
+    "anthropic",
+    "recharts",
+    "tabular-data",
+    "anomaly-detection",
+    "chart-generation"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./charts": {
+      "import": "./dist/charts.js",
+      "types": "./dist/charts.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "recharts": "^3.0.0",
+    "@ai-sdk/openai": "^3.0.0",
+    "@ai-sdk/anthropic": "^3.0.0",
+    "@ai-sdk/google": "^3.0.0",
+    "@ai-sdk/mistral": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "recharts": {
+      "optional": true
+    },
+    "@ai-sdk/openai": {
+      "optional": true
+    },
+    "@ai-sdk/anthropic": {
+      "optional": true
+    },
+    "@ai-sdk/google": {
+      "optional": true
+    },
+    "@ai-sdk/mistral": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "ai": "^6.0.134",
+    "zod": "^4.1.13",
+    "read-excel-file": "^7.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.7",
+    "@vitest/coverage-v8": "^4.1.0",
+    "lucide-react": "^0.556.0",
+    "react": "^19.2.4",
+    "recharts": "^3.5.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
